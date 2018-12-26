@@ -5,8 +5,9 @@ import java.util.Collection;
 import java.util.Collections;
 
 public abstract class Producto implements Comparable<Producto> {
-    // De existir mas variacion de productos se ira agregando mas clases hijas
-    // de esta
+    // De existir más variación de productos se irá agregando más clases hijas
+    // de esta misma
+
 
     private String nombre;
     private Double precio;
@@ -37,11 +38,12 @@ public abstract class Producto implements Comparable<Producto> {
 
 	ArrayList<Producto> v = new ArrayList<Producto>();
 
-	// se carga la lista con los productos(harcodeado esta vez) ,de ser
-	// posible que los productos
-	// vengan de un archivo o un base de datos solo se tendria que modificar
-	// la insercion
-	// de los elementos agregando un metodo sin modificar los demas
+	// se carga la lista con los productos(hardcodeado esta vez) ,de ser
+		// posible que los productos
+		// vengan de un archivo o un base de datos solo se tendría que modificar
+		// la inserción
+		// de los elementos agregando un método sin modificar los demás
+
 	v.add(new ProductoBebida("Coca-cola Zero", 20.0, 1.5));
 	v.add(new ProductoBebida("Coca-cola ", 18.0, 1.5));
 	v.add(new ProductoHigiene("Shampoo Sedal", 19.0, 500));
