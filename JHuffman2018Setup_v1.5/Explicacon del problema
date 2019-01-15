@@ -1,0 +1,6 @@
+Aca les paso el LINK donde se explica paso a paso en que consiste el algoritmo de Huffman y como seria el planteamiento a la resolucion
+https://www.youtube.com/watch?v=CGYDQJ7CSOE
+yo desarrolle una solucion posible, pero el unico problema era el la implementacion de funcion de lectura del Archivo 
+ya q el mismo era necesario que se realizazara lectura bufferizada de caracteres del archivo (la misma tienen que realizarse BYTE a BYTE)
+porque si no fuera asi  el programa al tratar de comprimir archivos pesados no seria optimo y tardadaria demasiado tiempo el proceso.
+  La codificacion y decodificacion del archivo se andaba bien 
