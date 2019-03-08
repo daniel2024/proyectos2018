@@ -1,12 +1,12 @@
 import {Response ,Request, Router} from 'express';
 
 
-import appToken from '../ dwolla_resource/client';
+import clientPlaid from '../plaid/clientPlaid';
 import { json } from 'body-parser';
 
 
 
-class IndexRoutes{
+class IndexRoutesPlaid{
 
         router:Router;
         

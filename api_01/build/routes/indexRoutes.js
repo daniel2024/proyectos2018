@@ -1,7 +1,7 @@
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
-}
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const client_1 = __importDefault(require("../ dwolla_resource/client"));
@@ -37,7 +37,7 @@ class IndexRoutes {
                 .then(res => console.log(res.headers.get('location')));
         });
     }
-    createFounding() {
+    createFounding(req, res) {
         client_1.default.auth.client()
             .then(function (appToken) {
             var customerUrl = 'https://api-sandbox.dwolla.com/customers/276153cd-4ba0-49d8-9fd7-9cf4d7d93954';
