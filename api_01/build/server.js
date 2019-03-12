@@ -7,11 +7,14 @@ const express_1 = __importDefault(require("express"));
 const morgan_1 = __importDefault(require("morgan"));
 const helmet_1 = __importDefault(require("helmet"));
 const indexRoutes_1 = __importDefault(require("./routes/indexRoutes"));
+//import client from './ dwolla_resource/client';
 class Server {
     constructor() {
         this.app = express_1.default();
         this.app.use(express_1.default.json()); //el tranformado de json va antes de la config
         this.app.use(express_1.default.urlencoded({ extended: false }));
+        this.app.use(express_1.default.static('/public'));
+        this.app.use(express_1.default.static('public'));
         this.config();
         this.routes();
     }

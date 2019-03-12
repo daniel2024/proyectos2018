@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,52 +8,61 @@
     <title>Document</title>
 </head>
 <body>
-    <button id="linkButton">Open Link - Institution Select</button>
-<button id="bofaButton">Open Link - Bank of America</button>
-<script 
-src="https://cdn.plaid.com/link/v2/stable/link-initialize.js">
-</script>
-<script>
-    
-var linkHandler = Plaid.create({
-  selectAccount: true,
-  env: 'sandbox',
-  clientName: 'raul',
-  key:'57bd669a77ada74389c439baf23a9e',
-  product: ['auth'],
- /* esto es opcional --->onLoad: function() {
-    // The Link module finished loading.
-  },*/
-  onSuccess: function(public_token, metadata) {
-    // The onSuccess function is called when the user has successfully
-    // authenticated and selected an account to use.
-    //
-    // When called, you will send the public_token and the selected
-    // account ID, metadata.account_id, to your backend app server.
-    //
-    // sendDataToBackendServer({
-    //   public_token: public_token,
-    //   account_id: metadata.account_id
-    // });
-    console.log('Public Token: ' + public_token);
-    console.log('Customer-selected account ID: ' + 
-metadata.account_id);
-  },
-  onExit: function(err, metadata) {
-    // The user exited the Link flow.
-    if (err != null) {
-      // The user encountered a Plaid API error prior to exiting.
-    }
-    // metadata contains information about the institution
-    // that the user selected and the most recent API request IDs.
-    // Storing this information can be helpful for support.
-  },
-});
+  <button id="link-button">Link Account</button>
+  <script 
+  src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+  <script 
+  src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+  <script type="text/javascript">
+  (function($) {
+    var handler = Plaid.create({
 
-// Trigger the standard Institution Select view
-document.getElementById('linkButton').onclick = function() {
-  linkHandler.open();
-};
-</script>
+      selectAccount: true,
+      clientName: 'Plaid Quickstart',
+      
+      env: 'sandbox',
+      // Replace with your public_key from the Dashboard
+      key:'57bd669a77ada74389c439baf23a9e',
+      product: ['auth'],
+      
+    
+      onSuccess: function(public_token, metadata) {
+      
+        $.post('/foundig', {
+          public_token: public_token,
+          item_id: metadata.account_id
+        });
+        console.log('Public Token: ' + public_token);
+        console.log('Customer-selected account ID: ' + JSON.stringify(metadata,null,2));
+      },
+      onExit: function(err, metadata) {
+        // The user exited the Link flow.
+        if (err != null) {
+          // The user encountered a Plaid API error prior to exiting.
+        }
+        // metadata contains information about the institution
+        // that the user selected and the most recent API request IDs.
+        // Storing this information can be helpful for support.
+      },
+      onEvent: function(eventName, metadata) {
+        // Optionally capture Link flow events, streamed through
+        // this callback as your users connect an Item to Plaid.
+        // For example:
+        // eventName = "TRANSITION_VIEW"
+        // metadata  = {
+        //   link_session_id: "123-abc",
+        //   mfa_type:        "questions",
+        //   timestamp:       "2017-09-14T14:42:19.350Z",
+        //   view_name:       "MFA",
+        // }
+      }
+    });
+  
+    $('#link-button').on('click', function(e) {
+      handler.open();
+    });
+  })(jQuery);
+  </script>
 </body>
 </html>
+

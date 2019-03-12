@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "cross-fetch": "^3.0.1",
     "dwolla-v2": "^2.0.1",
     "express": "^4.16.4",

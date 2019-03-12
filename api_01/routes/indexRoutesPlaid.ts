@@ -1,7 +1,7 @@
 import {Response ,Request, Router} from 'express';
 
 
-import clientPlaid from '../plaid/clientPlaid';
+import plaidClient from '../plaid/clientPlaid';
 import { json } from 'body-parser';
 
 
@@ -18,69 +18,45 @@ class IndexRoutesPlaid{
        
         
     }
-    //lista los clientes
-    listCustomers(req:Request,res:Response) {
-      appToken.auth.client()
-         .then(function(appToken:any){
-          appToken
-        .get('customers', { limit: 10 })
-        .then(res => console.log(res.body._embedded['customers']))
-  
-         })
-  
-    }
-    //creo cliente
-    createCustomer(req:Request,res:Response)
-    //la creacion de clientes varia mediante los campos del requestbody
-    {
-      //campos para un cliente que solo recive
-      var requestBody = {
-      firstName: 'Jane',
-      lastName: 'Merchant',
-      email: 'jmerchant@nomail.net',
-      type: 'receive-only',
-      businessName: 'Jane Corp llc',
-      ipAddress: '99.99.99.99'
-    };
-        appToken.auth.client()
-       .then(function(appToken:any) {
-      
-        appToken
-          .post('customers',requestBody)
-          .then(res => console.log(res.headers.get('location')))
-
-    })
-
-  }
-    createFounding(req:Request,res:Response){
-      appToken.auth.client()
-       .then(function(appToken:any) {
-        var customerUrl = 'https://api-sandbox.dwolla.com/customers/276153cd-4ba0-49d8-9fd7-9cf4d7d93954';
-        appToken
-        .post(`${customerUrl}/funding-sources-token`)
-        .then(function(res) {
-         console.log(res.body.token);
-        })
-
-      })
-  }
     routes(){
-        this.router.post('/customer/creater',this.createCustomer)
-        this.router.get('/customers',this.listCustomers)
-        this.router.get('/foundig',this.createFounding)
-      
-       
+        this.router.post('/get_access_token',this.getTokenAcess)
      
-    
-    
-    
+     
   }
-  
 
+  getTokenAcess (  req:Request, res:Response)  {
+    var ACCESS_TOKEN:string ;
+    var PUBLIC_TOKEN:string;
+    var ITEM_ID:string ;
+    var PROCESSOR_TOKEN:string;
+
+    PUBLIC_TOKEN = req.body.public_token
+    ITEM_ID=req.body.item_id
+ 
+  plaidClient.exchangePublicToken(PUBLIC_TOKEN, 
+    function(err:any, rese:any) {
+    
+      ACCESS_TOKEN = rese.access_token;
+      plaidClient.createProcessorToken(ACCESS_TOKEN, ITEM_ID, 
+        'dwolla', function(err:any, resep:any) {
+   
+       PROCESSOR_TOKEN=resep.processor_token;
+         console.log(PROCESSOR_TOKEN)
+         });
+   
+        });
+
+   
 }
 
 
-const indexRouter=new IndexRoutes();
+}
+  
+
+
+
+
+const indexRouter=new IndexRoutesPlaid();
 indexRouter.routes();
 
 

@@ -3,7 +3,7 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 
 import indexRouter from './routes/indexRoutes';
-import client from './ dwolla_resource/client';
+//import client from './ dwolla_resource/client';
 
 
 class Server{
@@ -15,6 +15,8 @@ class Server{
 
     this.app.use(express.json())//el tranformado de json va antes de la config
     this.app.use(express.urlencoded({extended:false}));
+    this.app.use(express.static('/public'))
+    this.app.use(express.static('public'));
     this.config();
     this.routes();
 

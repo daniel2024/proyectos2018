@@ -26,61 +26,58 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 app.use(express.static('public'));
+ 
+
+
+
+    /*
 
 app.get('/', function(request, response, next) {
-  response.render('/plaid.html')
+  
+  plaidClient.getInstitutions (4, 2225, function callback(err, response) {
+    if (err != null) {
+      if (plaid.isPlaidError(err)) {
+        // This is a Plaid error
+        console.log(err.error_code + ': ' + err.error_message);
+      } else {
+        // This is a connection error, an Error object
+        console.log(err.toString());
+      }
+    }
+    console.log(response.institutions)
+  }).then(data => res.send(data));
 })
+*/
+var ACCESS_TOKEN = null;
+var PUBLIC_TOKEN = null;
+var ITEM_ID = null;
+var PROCESSOR_TOKEN= null;
+app.post('/get_access_token', (req, res) => {
 
-app.post('/plaid_exchange', (req, res) => {
-var public_token = req.body.public_token;
+  PUBLIC_TOKEN = req.body.public_token
+  ITEM_ID=req.body.item_id
+ 
+  plaidClient.exchangePublicToken(PUBLIC_TOKEN, 
+    function(err, rese) {
+  
+      ACESS_TOKEN= rese.access_token;
+      plaidClient.createProcessorToken(ACCESS_TOKEN, ITEM_ID, 
+        'dwolla', function(err, resep) {
+   
+       PROCESSOR_TOKEN=resep.processor_token;
+         console.log(PROCESSOR_TOKEN)
+         });
+   
+        });
 
-plaidClient.exchangePublicToken(public_token).then(res => {
-  const access_token = res.access_token;
+})
+  
 
-  plaidClient.getAccounts(access_token).then(res => {
-    console.log(res.accounts);
-  });
-}).catch(err => {
-  // Indicates a network or runtime error.
-  if (!plaid.isPlaidError(err)) {
-    res.sendStatus(500);
-    return;
-  }
 
-  // Indicates plaid API error
-  console.log('/exchange token returned an error', {
-    error_type: err.error_type,
-    error_code: res.statusCode,
-    error_message: err.error_message,
-    display_message: err.display_message,
-    request_id: err.request_id,
-    status_code: err.status_code,
-  });
 
-  // Inspect error_type to handle the error in your application
-  switch(err.error_type) {
-      case 'INVALID_REQUEST':
-        // ...
-        break;
-      case 'INVALID_INPUT':
-        // ...
-        break;
-      case 'RATE_LIMIT_EXCEEDED':
-        // ...
-        break;
-      case 'API_ERROR':
-        // ...
-        break;
-      case 'ITEM_ERROR':
-        // ...
-        break;
-      default:
-        // fallthrough
-  }
 
-  res.sendStatus(500);
-});
-});
+
+
 
 app.listen(port, () => {
   console.log(`Listening on port ${ port }`);
