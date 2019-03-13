@@ -33,7 +33,7 @@
           item_id: metadata.account_id
         });
         console.log('Public Token: ' + public_token);
-        console.log('Customer-selected account ID: ' + JSON.stringify(metadata,null,2));
+        console.log('Customer-selected account ID: ' + JSON.stringify(metadata.account_id,null,2));
       },
       onExit: function(err, metadata) {
         // The user exited the Link flow.
@@ -66,3 +66,4 @@
 </body>
 </html>
 
+r-selected

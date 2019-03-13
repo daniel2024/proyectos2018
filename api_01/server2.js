@@ -52,6 +52,9 @@ var ACCESS_TOKEN = null;
 var PUBLIC_TOKEN = null;
 var ITEM_ID = null;
 var PROCESSOR_TOKEN= null;
+//------------------------------conseguir datos de plaid *-----------
+ 
+
 app.post('/get_access_token', (req, res) => {
 
   PUBLIC_TOKEN = req.body.public_token
@@ -60,18 +63,55 @@ app.post('/get_access_token', (req, res) => {
   plaidClient.exchangePublicToken(PUBLIC_TOKEN, 
     function(err, rese) {
   
-      ACESS_TOKEN= rese.access_token;
+      ACCESS_TOKEN= rese.access_token;
+
+        dataAccount(ACCESS_TOKEN,ITEM_ID);
+    
+
       plaidClient.createProcessorToken(ACCESS_TOKEN, ITEM_ID, 
         'dwolla', function(err, resep) {
    
        PROCESSOR_TOKEN=resep.processor_token;
-         console.log(PROCESSOR_TOKEN)
+         
          });
-   
+
         });
 
+
+      
+        function dataAccount(ACCESS_TOKEN ,ITEM_ID){
+          var  ACCOUNT_DATA=new Object();
+          
+          plaidClient.getAuth(ACCESS_TOKEN, function(error, authResponse) {
+            if (error != null) {
+              console.log(error);
+              }
+                //filtro el vector por id de la cuenta  en ambos casos 
+                //y obtengo de uno el roting y el numero de cuenta
+                //del otro tipo de cuenta y nombre.Devuelve un object
+              var account= authResponse.numbers.ach.find(function(element) {
+                return element.account_id===ITEM_ID;
+              });
+
+              ACCOUNT_DATA.routingNumber=account.routing;
+              ACCOUNT_DATA.accountNumber=account.account;  
+              
+            
+              account = authResponse.accounts.find(function(element) {
+              return element.account_id===ITEM_ID;
+              });
+              ACCOUNT_DATA.bankAccountType=account.subtype;
+              ACCOUNT_DATA.name=account.name
+              
+             
+                
+              return ACCOUNT_DATA;
+            
+            })
+        
+        }
+
 })
-  
 
 
 

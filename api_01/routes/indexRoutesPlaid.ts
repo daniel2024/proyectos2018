@@ -37,7 +37,10 @@ class IndexRoutesPlaid{
     function(err:any, rese:any) {
     
       ACCESS_TOKEN = rese.access_token;
-      plaidClient.createProcessorToken(ACCESS_TOKEN, ITEM_ID, 
+
+      
+
+ plaidClient.createProcessorToken(ACCESS_TOKEN, ITEM_ID, 
         'dwolla', function(err:any, resep:any) {
    
        PROCESSOR_TOKEN=resep.processor_token;
@@ -45,8 +48,6 @@ class IndexRoutesPlaid{
          });
    
         });
-
-   
 }
 
 
