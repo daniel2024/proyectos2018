@@ -3,11 +3,12 @@ import { Response, Request, Router } from 'express';
 import plaidClient from '../plaid/clientPlaid'
 import appToken from '../ dwolla_resource/client';
 import { json } from 'body-parser';
-
+import DwollaClient from '../ dwolla_resource/DwollaClient';
+import dwollaClient from '../ dwolla_resource/DwollaClient';
 
 class IndexRoutes {
 
-  router: Router;
+  router:Router;
 
 
   constructor() {
@@ -18,46 +19,30 @@ class IndexRoutes {
 
   }
   //lista los clientes
-  listCustomers(req: Request, res: Response) {
-    appToken.auth.client()
-    .then(function(appToken) {
-      console.log(appToken)
-      
+ async listCustomers(req: Request, res: Response) {
   
-    });
-   
-    /*appToken.auth.client()
-      .then(function (appToken: any) {
-        appToken
-          .get('customers', { limit: 10 })
-          .then(res => console.log(res.body._embedded['customers']))
-
-      })*/
+    res.send(await DwollaClient.getClients());
 
   }
+  //obtengo cliente por email
+  async getCustomer(req: Request, res: Response) {
+  
+    res.send(await DwollaClient.getClientByEmail(req.body.email));
+
+  }
+
   //creo cliente
-  createCustomer(req: Request, res: Response)
-  //la creacion de clientes varia mediante los campos del requestbody
+ async createCustomer(req: Request, res: Response)
+  //la creacion de clientes varia mediante los campos 
+  //que recibe del front
   {
     //campos para un cliente que solo recive
-    var requestBody = {
-      firstName: 'Jane',
-      lastName: 'Merchant',
-      email: 'jmerchant@nomail.net',
-      type: 'receive-only',
-      businessName: 'Jane Corp llc',
-      ipAddress: '99.99.99.99'
-    };
-    appToken.auth.client()
-      .then(function (appToken: any) {
-
-        appToken
-          .post('customers', requestBody)
-          .then(res => console.log(res.headers.get('location')))
-
-      })
+    
+   res.send(await DwollaClient.clientCreate(req.body))
 
   }
+
+
   createFounding(req: Request, res: Response) {
     //----------------Plaid----------------------
     var ACCESS_TOKEN: string;
@@ -142,45 +127,16 @@ class IndexRoutes {
 
 
   routes() {
-    this.router.post('/customer/creater', this.createCustomer)
-    this.router.get('/customers', this.listCustomers)
-    this.router.post('/foundig', this.createFounding)
-    this.router.post('/tranfer', this.makeTranfer)
+    
+      this.router.post('/customer/creater', this.createCustomer)
+      this.router.get('/customers', this.listCustomers)
+      this.router.get('/customer', this.getCustomer)
+      this.router.post('/foundig', this.createFounding)
+      this.router.post('/tranfer', this.makeTranfer)
+  
 
   }
-  // funciones auxiliares
-  static dataAccount(ACCESS_TOKEN: string, ITEM_ID: string) {
-    var ACCOUNT_DATA:any ;
-
-    plaidClient.getAuth(ACCESS_TOKEN, function (error, authResponse) {
-      if (error != null) {
-        console.log(error);
-      }
-      //filtro el vector por id de la cuenta  en ambos casos 
-      //y obtengo de uno el roting y el numero de cuenta
-      //del otro tipo de cuenta y nombre.Devuelve un object
-      var account = authResponse.numbers.ach.find(function (element: any) {
-        return element.account_id === ITEM_ID;
-      });
-
-       var account2 = authResponse.accounts.find(function (element: any) {
-        return element.account_id === ITEM_ID;
-      });
-      
-      ACCOUNT_DATA={ 
-      
-      'routingNumber':account.routing,
-      'accountNumber':account.account,
-       'name' :account2.name,
-      'bankAccountType':account2.subtype,
-      }
-      console.log(ACCOUNT_DATA)
-
-      return ACCOUNT_DATA;
-
-    })
-
-  }
+ 
 
 }
 

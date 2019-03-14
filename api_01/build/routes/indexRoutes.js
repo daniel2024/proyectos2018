@@ -14,6 +14,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const clientPlaid_1 = __importDefault(require("../plaid/clientPlaid"));
 const client_1 = __importDefault(require("../ dwolla_resource/client"));
+const DwollaClient_1 = __importDefault(require("../ dwolla_resource/DwollaClient"));
 class IndexRoutes {
     constructor() {
         this.router = express_1.Router();
@@ -21,34 +22,21 @@ class IndexRoutes {
     }
     //lista los clientes
     listCustomers(req, res) {
-        client_1.default.auth.client()
-            .then(function (appToken) {
-            console.log(appToken);
+        return __awaiter(this, void 0, void 0, function* () {
+            res.send(yield DwollaClient_1.default.getClients());
         });
-        /*appToken.auth.client()
-          .then(function (appToken: any) {
-            appToken
-              .get('customers', { limit: 10 })
-              .then(res => console.log(res.body._embedded['customers']))
-    
-          })*/
+    }
+    //obtengo cliente por email
+    getCustomer(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            res.send(yield DwollaClient_1.default.getClientByEmail(req.body.email));
+        });
     }
     //creo cliente
     createCustomer(req, res) {
-        //campos para un cliente que solo recive
-        var requestBody = {
-            firstName: 'Jane',
-            lastName: 'Merchant',
-            email: 'jmerchant@nomail.net',
-            type: 'receive-only',
-            businessName: 'Jane Corp llc',
-            ipAddress: '99.99.99.99'
-        };
-        client_1.default.auth.client()
-            .then(function (appToken) {
-            appToken
-                .post('customers', requestBody)
-                .then(res => console.log(res.headers.get('location')));
+        return __awaiter(this, void 0, void 0, function* () {
+            //campos para un cliente que solo recive
+            res.send(yield DwollaClient_1.default.clientCreate(req.body));
         });
     }
     createFounding(req, res) {
@@ -110,34 +98,9 @@ class IndexRoutes {
     routes() {
         this.router.post('/customer/creater', this.createCustomer);
         this.router.get('/customers', this.listCustomers);
+        this.router.get('/customer', this.getCustomer);
         this.router.post('/foundig', this.createFounding);
         this.router.post('/tranfer', this.makeTranfer);
-    }
-    // funciones auxiliares
-    static dataAccount(ACCESS_TOKEN, ITEM_ID) {
-        var ACCOUNT_DATA;
-        clientPlaid_1.default.getAuth(ACCESS_TOKEN, function (error, authResponse) {
-            if (error != null) {
-                console.log(error);
-            }
-            //filtro el vector por id de la cuenta  en ambos casos 
-            //y obtengo de uno el roting y el numero de cuenta
-            //del otro tipo de cuenta y nombre.Devuelve un object
-            var account = authResponse.numbers.ach.find(function (element) {
-                return element.account_id === ITEM_ID;
-            });
-            var account2 = authResponse.accounts.find(function (element) {
-                return element.account_id === ITEM_ID;
-            });
-            ACCOUNT_DATA = {
-                'routingNumber': account.routing,
-                'accountNumber': account.account,
-                'name': account2.name,
-                'bankAccountType': account2.subtype,
-            };
-            console.log(ACCOUNT_DATA);
-            return ACCOUNT_DATA;
-        });
     }
 }
 const indexRouter = new IndexRoutes();
