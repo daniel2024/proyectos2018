@@ -1,10 +1,10 @@
 import { Response, Request, Router } from 'express';
 
-import plaidClient from '../plaid/clientPlaid'
+import plaidToken from '../plaid/PlaidToken'
 import appToken from '../ dwolla_resource/client';
 import { json } from 'body-parser';
 import DwollaClient from '../ dwolla_resource/DwollaClient';
-import dwollaClient from '../ dwolla_resource/DwollaClient';
+
 
 class IndexRoutes {
 
@@ -36,66 +36,46 @@ class IndexRoutes {
   //la creacion de clientes varia mediante los campos 
   //que recibe del front
   {
+    //campos para un cliente que solo recive
     
    res.send(await DwollaClient.clientCreate(req.body))
 
   }
 
 
-  createFounding(req: Request, res: Response) {
+  async createFounding(req: Request, res: Response) {
     //----------------Plaid----------------------
+   /*
     var ACCESS_TOKEN: string;
     var PUBLIC_TOKEN: string;
     var ITEM_ID: string;
-    var PROCESSOR_TOKEN: string;
-
-    var ACCOUNT_DATA:any;
-
-    PUBLIC_TOKEN = req.body.public_token
+    
+    req.body.public_token
     ITEM_ID = req.body.item_id
+    var ACCOUNT_DATA:any;
+*/ 
 
-    plaidClient.exchangePublicToken(PUBLIC_TOKEN,
-      async function (err: any, rese: any) {
+//        ACCOUNT_DATA= await IndexRoutes.dataAccount(ACCESS_TOKEN,ITEM_ID);
 
-        ACCESS_TOKEN = rese.access_token;
+    console.log(await DwollaClient.getClientByEmail('julio_perez@gmail.com')_);
 
-        ACCOUNT_DATA= await IndexRoutes.dataAccount(ACCESS_TOKEN,ITEM_ID);
-        
-        plaidClient.createProcessorToken(ACCESS_TOKEN, ITEM_ID,
-          'dwolla', function (err: any, resep: any) {
-
-            PROCESSOR_TOKEN = resep.processor_token;
-
-
-            var customerUrl = "https://api-sandbox.dwolla.com/customers/9338b343-21ac-462a-8567-5c08cc7d46bf";
-            var requestBody = {
-            'routingNumber': ACCOUNT_DATA.routingNumber,
-            'accountNumber': ACCOUNT_DATA.accountNumber,
-            'bankAccountType': ACCOUNT_DATA.bankAccountType,
-            'name': ACCOUNT_DATA.name,
+    console.log(await plaidToken.getToken(req.body.public_token,req.body.item_id))
+          /*  var requestBody = await {
+           
+            'name':'prueba',// ACCOUNT_DATA.name,
             'plaidToken': PROCESSOR_TOKEN
 
           };
 
-          appToken.auth.client()
-          .then(function (appToken: any) {
-    
-    
-            appToken
-              .post(`${customerUrl}/funding-sources`, requestBody)
-              .then(res => console.log(res.headers.get('location')));
-    
-          });
-
-
-      })
-
-    
-    });
+           appToken.auth.client()
+          .then(appToken => appToken.post(`${customerUrl}/funding-sources`, requestBody)
+          .then(res => console.log(res.headers.get('location'))))
+*/
+    }
     
 
-  }
-  //-------------------------------------------   
+  
+  
 
   makeTranfer() {
 

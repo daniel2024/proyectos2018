@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const clientPlaid_1 = __importDefault(require("../plaid/clientPlaid"));
+const PlaidToken_1 = __importDefault(require("../plaid/PlaidToken"));
 const client_1 = __importDefault(require("../ dwolla_resource/client"));
 const DwollaClient_1 = __importDefault(require("../ dwolla_resource/DwollaClient"));
 class IndexRoutes {
@@ -40,39 +40,33 @@ class IndexRoutes {
         });
     }
     createFounding(req, res) {
-        //----------------Plaid----------------------
-        var ACCESS_TOKEN;
-        var PUBLIC_TOKEN;
-        var ITEM_ID;
-        var PROCESSOR_TOKEN;
-        var ACCOUNT_DATA;
-        PUBLIC_TOKEN = req.body.public_token;
-        ITEM_ID = req.body.item_id;
-        clientPlaid_1.default.exchangePublicToken(PUBLIC_TOKEN, function (err, rese) {
-            return __awaiter(this, void 0, void 0, function* () {
-                ACCESS_TOKEN = rese.access_token;
-                ACCOUNT_DATA = yield IndexRoutes.dataAccount(ACCESS_TOKEN, ITEM_ID);
-                clientPlaid_1.default.createProcessorToken(ACCESS_TOKEN, ITEM_ID, 'dwolla', function (err, resep) {
-                    PROCESSOR_TOKEN = resep.processor_token;
-                    var customerUrl = "https://api-sandbox.dwolla.com/customers/9338b343-21ac-462a-8567-5c08cc7d46bf";
-                    var requestBody = {
-                        'routingNumber': ACCOUNT_DATA.routingNumber,
-                        'accountNumber': ACCOUNT_DATA.accountNumber,
-                        'bankAccountType': ACCOUNT_DATA.bankAccountType,
-                        'name': ACCOUNT_DATA.name,
-                        'plaidToken': PROCESSOR_TOKEN
-                    };
-                    client_1.default.auth.client()
-                        .then(function (appToken) {
-                        appToken
-                            .post(`${customerUrl}/funding-sources`, requestBody)
-                            .then(res => console.log(res.headers.get('location')));
-                    });
-                });
-            });
+        return __awaiter(this, void 0, void 0, function* () {
+            //----------------Plaid----------------------
+            /*
+             var ACCESS_TOKEN: string;
+             var PUBLIC_TOKEN: string;
+             var ITEM_ID: string;
+             
+             req.body.public_token
+             ITEM_ID = req.body.item_id
+             var ACCOUNT_DATA:any;
+         */
+            //        ACCOUNT_DATA= await IndexRoutes.dataAccount(ACCESS_TOKEN,ITEM_ID);
+            console.log(yield DwollaClient_1.default.getClientByEmail('julio_perez@gmail.com'), _);
+            console.log(yield PlaidToken_1.default.getToken(req.body.public_token, req.body.item_id));
+            /*  var requestBody = await {
+             
+              'name':'prueba',// ACCOUNT_DATA.name,
+              'plaidToken': PROCESSOR_TOKEN
+  
+            };
+  
+             appToken.auth.client()
+            .then(appToken => appToken.post(`${customerUrl}/funding-sources`, requestBody)
+            .then(res => console.log(res.headers.get('location'))))
+  */
         });
     }
-    //-------------------------------------------   
     makeTranfer() {
         var tranfer = {
             "_links": {

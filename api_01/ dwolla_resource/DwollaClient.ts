@@ -16,15 +16,19 @@ class DwollaClient {
     }
 
     async  getClientByEmail(email: string) {
-
+/*
         var clientes = await this.getClients();
 
         var cliente = await clientes.customers.find(function (element: any) {
             return element.email === email;
         });
 
+    
+        return cliente;*/
+        return await token.auth.client()
+        .then(appToken => appToken.get('customers'),{search:email})
+        .then(res => res.body._embedded);
 
-        return cliente;
     }
 
     async  clientCreate(date:Object) {
@@ -36,6 +40,13 @@ class DwollaClient {
         
        
     }
+
+    async getFundingSource(){
+
+
+    }
+
+    async fundingSourceCreate(){}
 
 }
 const dwollaClient = new DwollaClient()

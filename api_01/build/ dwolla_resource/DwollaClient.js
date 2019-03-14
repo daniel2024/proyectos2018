@@ -26,6 +26,7 @@ class DwollaClient {
             var cliente = yield clientes.customers.find(function (element) {
                 return element.email === email;
             });
+            console.log(yield cliente);
             return cliente;
         });
     }
@@ -35,6 +36,13 @@ class DwollaClient {
                 .then(appToken => appToken.post('customers', date)
                 .then(res => res.headers.get('location')));
         });
+    }
+    getFundingSource() {
+        return __awaiter(this, void 0, void 0, function* () {
+        });
+    }
+    fundingSourceCreate() {
+        return __awaiter(this, void 0, void 0, function* () { });
     }
 }
 const dwollaClient = new DwollaClient();
