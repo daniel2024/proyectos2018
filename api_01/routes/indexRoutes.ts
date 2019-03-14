@@ -36,7 +36,6 @@ class IndexRoutes {
   //la creacion de clientes varia mediante los campos 
   //que recibe del front
   {
-    //campos para un cliente que solo recive
     
    res.send(await DwollaClient.clientCreate(req.body))
 
