@@ -1,2 +1,0 @@
-es una api que crea numeros aletorios dados por el cliente que pasa los dos parametros 
-para los limites
