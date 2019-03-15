@@ -42,6 +42,13 @@ class IndexRoutes {
 
   }
 
+  async getFundingSourcesOfClient(req: Request, res: Response){
+
+  
+    res.send(await DwollaClient.getFundingSources(req.body.email))
+
+  }
+
 
   async createFounding(req: Request, res: Response) {
     //----------------Plaid----------------------
@@ -57,7 +64,7 @@ class IndexRoutes {
 
 //        ACCOUNT_DATA= await IndexRoutes.dataAccount(ACCESS_TOKEN,ITEM_ID);
 
-    console.log(await DwollaClient.getClientByEmail('julio_perez@gmail.com')_);
+    
 
     console.log(await plaidToken.getToken(req.body.public_token,req.body.item_id))
           /*  var requestBody = await {
@@ -103,14 +110,21 @@ class IndexRoutes {
           .then(res => console.log(res.headers.get('location')));
       })
   }
+  async getFundingByNameAndType(req: Request, res: Response){
 
+    res.send(await DwollaClient.getFundingSourcesByNameAndType(req.body.email,
+      req.body.name,req.body.type))
+
+  }
 
   routes() {
     
       this.router.post('/customer/creater', this.createCustomer)
       this.router.get('/customers', this.listCustomers)
       this.router.get('/customer', this.getCustomer)
-      this.router.post('/foundig', this.createFounding)
+      this.router.get('/foundingSource/customer/nameAndType',this.getFundingByNameAndType)
+      this.router.get('/foundingSources/customer', this.getFundingSourcesOfClient)
+      this.router.post('/create/founding', this.createFounding)
       this.router.post('/tranfer', this.makeTranfer)
   
 

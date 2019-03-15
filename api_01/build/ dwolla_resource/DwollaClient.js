@@ -12,6 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = __importDefault(require("./client"));
+const client_2 = __importDefault(require("./client"));
+const lodash_1 = __importDefault(require("lodash"));
 class DwollaClient {
     getClients() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -22,12 +24,9 @@ class DwollaClient {
     }
     getClientByEmail(email) {
         return __awaiter(this, void 0, void 0, function* () {
-            var clientes = yield this.getClients();
-            var cliente = yield clientes.customers.find(function (element) {
-                return element.email === email;
-            });
-            console.log(yield cliente);
-            return cliente;
+            return yield client_2.default.auth.client()
+                .then(appToken => appToken.get('customers', { search: email })
+                .then(res => res.body._embedded.customers[0]));
         });
     }
     clientCreate(date) {
@@ -37,12 +36,41 @@ class DwollaClient {
                 .then(res => res.headers.get('location')));
         });
     }
-    getFundingSource() {
+    getFundingSources(email) {
         return __awaiter(this, void 0, void 0, function* () {
+            //alguna forma de tener todas las rutas guardadas
+            var urlClient = yield this.getClientByEmail(email)
+                .then(client => 'https://api-sandbox.dwolla.com/customers/' + client.id);
+            return yield client_1.default.auth.client()
+                .then(appToken => appToken.get(`${urlClient}/funding-sources`, { removed: false })
+                .then(res => res.body._embedded['funding-sources']));
+        });
+    }
+    getFundingSourcesByNameAndType(email, name, type) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var foundingSources = yield this.getFundingSources(email);
+            return yield foundingSources.find(function (element) {
+                return (element.name == name && element.bankAccountType == type);
+            });
         });
     }
     fundingSourceCreate() {
-        return __awaiter(this, void 0, void 0, function* () { });
+        return __awaiter(this, void 0, void 0, function* () {
+        });
+    }
+    //obtiene las rutas de los objetos de dwolla
+    //(objeto , string (elmeto q se quiere)) si no se manda elemento te da los item q no son rutas  
+    founRoutes(elemento, ruta) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (ruta) {
+                var path;
+                return yield lodash_1.default.get(elemento, path = `_links.${ruta}.href`);
+            }
+            else {
+                yield delete elemento._links;
+                return elemento;
+            }
+        });
     }
 }
 const dwollaClient = new DwollaClient();

@@ -20,7 +20,7 @@ class Server {
     }
     config() {
         //settings
-        this.app.set('port', process.env.PORT || 5000);
+        this.app.set('port', process.env.PORT || 4000);
         //midelware
         this.app.use(morgan_1.default('dev'));
         this.app.use(helmet_1.default());
@@ -30,7 +30,7 @@ class Server {
     }
     start() {
         this.app.listen(this.app.get('port'), () => {
-            console.log('server on port 5000');
+            console.log('server on port 4000');
         });
     }
 }
