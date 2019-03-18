@@ -46,7 +46,7 @@ class IndexRoutes {
     }
     createFounding(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(yield PlaidToken_1.default.getToken(req.body.public_token, req.body.item_id, 'julio_perez@gmail.com'));
+            yield PlaidToken_1.default.getToken(req.body.public_token, req.body.item_id, req.body.email);
         });
     }
     makeTranfer() {
