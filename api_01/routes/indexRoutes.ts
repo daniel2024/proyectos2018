@@ -54,7 +54,7 @@ class IndexRoutes {
 
 
     console.log(await plaidToken.getToken(req.body.public_token,req.body.item_id
-      ,'julio_perez@gmail.com'))
+      ,req.body.email))
     
     
 
