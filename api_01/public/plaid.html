@@ -28,7 +28,7 @@
     
       onSuccess: function(public_token, metadata) {
       
-        $.post('/foundig', {
+        $.post('/create/founding', {
           public_token: public_token,
           item_id: metadata.account_id
         });

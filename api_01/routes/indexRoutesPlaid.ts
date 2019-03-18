@@ -2,7 +2,7 @@ import {Response ,Request, Router} from 'express';
 
 
 import plaidClient from '../plaid/clientPlaid';
-import { json } from 'body-parser';
+
 
 
 

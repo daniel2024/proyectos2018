@@ -54,8 +54,12 @@ class DwollaClient {
             });
         });
     }
-    fundingSourceCreate() {
+    fundingSourceCreate(requestBody, email) {
         return __awaiter(this, void 0, void 0, function* () {
+            var customerUrl = yield this.founRoutes(yield this.getClientByEmail(email), 'funding-sources');
+            return yield client_1.default.auth.client()
+                .then(appToken => appToken.post(customerUrl, requestBody)
+                .then(res => res.headers.get('location')));
         });
     }
     //obtiene las rutas de los objetos de dwolla

@@ -46,29 +46,7 @@ class IndexRoutes {
     }
     createFounding(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            //----------------Plaid----------------------
-            /*
-             var ACCESS_TOKEN: string;
-             var PUBLIC_TOKEN: string;
-             var ITEM_ID: string;
-             
-             req.body.public_token
-             ITEM_ID = req.body.item_id
-             var ACCOUNT_DATA:any;
-         */
-            //        ACCOUNT_DATA= await IndexRoutes.dataAccount(ACCESS_TOKEN,ITEM_ID);
-            console.log(yield PlaidToken_1.default.getToken(req.body.public_token, req.body.item_id));
-            /*  var requestBody = await {
-             
-              'name':'prueba',// ACCOUNT_DATA.name,
-              'plaidToken': PROCESSOR_TOKEN
-  
-            };
-  
-             appToken.auth.client()
-            .then(appToken => appToken.post(`${customerUrl}/funding-sources`, requestBody)
-            .then(res => console.log(res.headers.get('location'))))
-  */
+            console.log(yield PlaidToken_1.default.getToken(req.body.public_token, req.body.item_id, 'julio_perez@gmail.com'));
         });
     }
     makeTranfer() {

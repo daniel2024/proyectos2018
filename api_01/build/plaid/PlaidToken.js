@@ -12,23 +12,38 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const clientPlaid_1 = __importDefault(require("./clientPlaid"));
+const DwollaClient_1 = __importDefault(require("../ dwolla_resource/DwollaClient"));
 class PlaidToken {
-    getToken(PUBLIC_TOKEN, ITEM_ID) {
+    getToken(PUBLIC_TOKEN, ITEM_ID, email) {
         return __awaiter(this, void 0, void 0, function* () {
-            /*
-            lo que mando cuando tengo usar
-                  req.body.public_token
-                  req.body.item_id
-            */
-            yield clientPlaid_1.default.exchangePublicToken(PUBLIC_TOKEN, (err, res) => __awaiter(this, void 0, void 0, function* () {
+            clientPlaid_1.default.exchangePublicToken(PUBLIC_TOKEN, (err, res) => __awaiter(this, void 0, void 0, function* () {
                 var ACCESS_TOKEN = yield res.access_token;
-                //  dataAccount(ACCESS_TOKEN,ITEM_ID)
-                yield clientPlaid_1.default.createProcessorToken(ACCESS_TOKEN, ITEM_ID, 'dwolla', function (err, resep) {
+                clientPlaid_1.default.createProcessorToken(ACCESS_TOKEN, ITEM_ID, 'dwolla', function (err, resep) {
                     return __awaiter(this, void 0, void 0, function* () {
-                        return yield resep.processor_token;
+                        var ProcessorToken = yield resep.processor_token;
+                        var requestBody = yield {
+                            'plaidToken': ProcessorToken,
+                            'name': 'Plaid cheking'
+                        };
+                        DwollaClient_1.default.fundingSourceCreate(ProcessorToken, email);
                     });
                 });
             }));
+        });
+    }
+    dataAccount(ACCESS_TOKEN, ITEM_ID) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var ACCOUNT_DATA;
+            yield clientPlaid_1.default.getAuth(ACCESS_TOKEN, function (error, authResponse) {
+                if (error != null) {
+                    console.log(error);
+                }
+                var account = authResponse.accounts.find(function (element) {
+                    return element.account_id === ITEM_ID;
+                });
+                ACCOUNT_DATA = account.name;
+                return ACCOUNT_DATA;
+            });
         });
     }
 }

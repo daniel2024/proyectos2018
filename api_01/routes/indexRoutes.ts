@@ -51,38 +51,15 @@ class IndexRoutes {
 
 
   async createFounding(req: Request, res: Response) {
-    //----------------Plaid----------------------
-   /*
-    var ACCESS_TOKEN: string;
-    var PUBLIC_TOKEN: string;
-    var ITEM_ID: string;
+
+
+    console.log(await plaidToken.getToken(req.body.public_token,req.body.item_id
+      ,'julio_perez@gmail.com'))
     
-    req.body.public_token
-    ITEM_ID = req.body.item_id
-    var ACCOUNT_DATA:any;
-*/ 
-
-//        ACCOUNT_DATA= await IndexRoutes.dataAccount(ACCESS_TOKEN,ITEM_ID);
-
-    
-
-    console.log(await plaidToken.getToken(req.body.public_token,req.body.item_id))
-          /*  var requestBody = await {
-           
-            'name':'prueba',// ACCOUNT_DATA.name,
-            'plaidToken': PROCESSOR_TOKEN
-
-          };
-
-           appToken.auth.client()
-          .then(appToken => appToken.post(`${customerUrl}/funding-sources`, requestBody)
-          .then(res => console.log(res.headers.get('location'))))
-*/
-    }
     
 
   
-  
+  }
 
   makeTranfer() {
 
